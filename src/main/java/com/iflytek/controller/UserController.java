@@ -45,4 +45,20 @@ public class UserController {
 
         return ResponseEntity.ok(data);
     }
+    @ApiOperation("更新用户信息")
+    @PostMapping("/update")
+    public int upDate(@RequestBody User user){
+        return userService.upDate(user);
+    }
+    @ApiOperation("注册用户信息")
+    @PostMapping("/register")
+    public int register(@RequestBody LoginRequest loginRequest){
+        return userService.register(loginRequest);
+    }
+    @ApiOperation("删除用户信息")
+    @PostMapping("/delete")
+    public int delete(@RequestBody int userId){
+        return userService.delete(userId);
+    }
+
 }

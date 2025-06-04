@@ -42,4 +42,22 @@ public class UserServiceImpl implements UserService {
 
         return new CustomUserDetails(user); // 构造并返回 UserDetails 对象
     }
+    @Override
+    public int upDate(User user){
+       int row=userMapper.updateById(user);
+        return row>0?1:0;
+    }
+    @Override
+    public int register(LoginRequest loginRequest){
+        User user=new User();
+        user.setLogintext(loginRequest.getLoginText());
+        user.setPassword(loginRequest.getPassword());
+        int row=userMapper.insert(user);
+        return row>0?1:0;
+    }
+    @Override
+    public int delete(int userId){
+        int row=userMapper.deleteById(userId);
+        return row>0?1:0;
+    }
 }
