@@ -1,6 +1,7 @@
 package com.iflytek.controller;
 
 
+import com.iflytek.dto.CustomUserDetails;
 import com.iflytek.dto.LoginRequest;
 import com.iflytek.entity.User;
 import com.iflytek.service.UserService;
@@ -27,7 +28,8 @@ public class UserController {
     private JwtUtil jwtUtil;
     @ApiOperation("查看当前用户")
     @GetMapping
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        System.out.println(userDetails.getUser());
         return ResponseEntity.ok(userDetails);
     }
     @ApiOperation("用户登录")
