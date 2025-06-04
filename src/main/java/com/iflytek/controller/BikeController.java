@@ -22,8 +22,8 @@ public class BikeController {
     private BikeService bikeService;
     @ApiOperation("查看自行车")
     @GetMapping
-    public ResponseEntity<?> selectBike(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam int id) {
+    public ResponseEntity<?> selectBike(@AuthenticationPrincipal CustomUserDetails userDetails) {
         System.out.println(userDetails.getUser());
-        return ResponseEntity.ok(bikeService.findBikesByOwnerId(id));
+        return ResponseEntity.ok(bikeService.findBikesByOwnerId(userDetails.getUser().getUserid()));
     }
 }

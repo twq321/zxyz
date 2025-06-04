@@ -9,7 +9,7 @@ import lombok.Data;
 @TableName(value = "user")
 public class User {
     @TableId(type = IdType.AUTO)  // 指定主键策略，如果是数据库自增主键用 AUTO
-    private Long userid;
+    private Integer userid;
 
     private String username;
 
