@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "your_secret_key";
+    private final String SECRET_KEY = "twq_sjw_hek_ygp_ghy_zyf";
     private final long EXPIRATION = 1000 * 60 * 60; // 1小时
 
     public String generateToken(User user) {

@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**"
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/login").permitAll() // 允许登录接口匿名访问
+                .antMatchers("/user/login").permitAll() // 允许登录接口匿名访问
                 .anyRequest().authenticated(); // 其他接口需要认证
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
