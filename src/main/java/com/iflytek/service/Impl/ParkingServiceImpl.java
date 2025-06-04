@@ -41,6 +41,7 @@ public class ParkingServiceImpl implements ParkingService {
         record.setUserid(userId);
         record.setBikeid(bikeId);
         record.setStarttime(LocalDateTime.now());
+        record.setSparkingid(parking.getParkingid());
         record.setTouser(0);
         record.setType("park");
         recordMapper.insert(record);
@@ -61,6 +62,7 @@ public class ParkingServiceImpl implements ParkingService {
 
         Record record = recordMapper.selectById(parking.getRecordid());
         record.setEndtime(LocalDateTime.now());
+        record.setEparkingid(parking.getParkingid());
         LocalDateTime starttime = record.getStarttime();
         LocalDateTime endtime = record.getEndtime();
         // 计费逻辑
@@ -128,6 +130,7 @@ public class ParkingServiceImpl implements ParkingService {
         parkingMapper.updateById(parking);
 
         record.setEndtime(LocalDateTime.now());
+        record.setEparkingid(parking.getParkingid());
         LocalDateTime starttime = record.getStarttime();
         LocalDateTime endtime = record.getEndtime();
         // 计费逻辑
