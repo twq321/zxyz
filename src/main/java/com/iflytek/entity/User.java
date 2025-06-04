@@ -25,6 +25,5 @@ public class User {
 
     private Integer usebikeid;
 
-    private Integer bikeid;
     private Integer nowborrow;
 }
