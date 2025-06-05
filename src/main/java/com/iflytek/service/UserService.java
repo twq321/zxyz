@@ -12,5 +12,5 @@ public interface UserService {
     int upDate(User user);
     int register(LoginRequest loginRequest);
     int delete(int userId);
-
+    User loginByFace(int userId);
 }

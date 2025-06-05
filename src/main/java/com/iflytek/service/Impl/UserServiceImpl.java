@@ -60,4 +60,8 @@ public class UserServiceImpl implements UserService {
         int row=userMapper.deleteById(userId);
         return row>0?1:0;
     }
+    @Override
+    public User loginByFace(int userId){
+        return userMapper.selectById(userId);
+    }
 }

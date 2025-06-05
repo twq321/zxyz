@@ -32,10 +32,25 @@ public class UserController {
         System.out.println(userDetails.getUser());
         return ResponseEntity.ok(userDetails);
     }
-    @ApiOperation("用户登录")
+    @ApiOperation("用户账号登录")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         User loginUser = userService.loginUser(loginRequest);
+        if (loginUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("用户名或密码错误");
+        }
+        String token = jwtUtil.generateToken(loginUser);
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", token);
+        data.put("user", loginUser);
+
+        return ResponseEntity.ok(data);
+    }
+    @ApiOperation("用户人脸登录")
+    @PostMapping("/loginByFace")
+    public ResponseEntity<?> loginByFace(@RequestBody int userId) {
+        User loginUser = userService.loginByFace(userId);
         if (loginUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("用户名或密码错误");

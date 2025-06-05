@@ -31,7 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/swagger-ui/**",
-                        "/webjars/**"
+                        "/webjars/**",
+                        "/user/register",
+                        "/user/loginByFace"
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/user/login").permitAll() // 允许登录接口匿名访问
