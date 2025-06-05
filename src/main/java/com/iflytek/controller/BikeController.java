@@ -1,13 +1,13 @@
 package com.iflytek.controller;
 
 import com.iflytek.dto.CustomUserDetails;
+import com.iflytek.entity.Bike;
 import com.iflytek.service.BikeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,5 +25,40 @@ public class BikeController {
     public ResponseEntity<?> selectBike(@AuthenticationPrincipal CustomUserDetails userDetails) {
         System.out.println(userDetails.getUser());
         return ResponseEntity.ok(bikeService.findBikesByOwnerId(userDetails.getUser().getUserid()));
+    }
+    @PostMapping("/add")
+    public ResponseEntity<?> addBike(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Bike bike) {
+        bike.setOwnerid(userDetails.getUser().getUserid());
+        int res = bikeService.addBike(bike);
+        if (res == 1) {
+            return ResponseEntity.ok("添加成功, bikeId: " + bike.getBikeid());
+        } else {
+            return ResponseEntity.badRequest().body("添加失败.");
+        }
+    }
+    @PutMapping("/update")
+    public ResponseEntity<?> updateBike(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Bike bike) {
+        if (bike.getBikeid() != userDetails.getUser().getUserid()) {
+            return ResponseEntity.badRequest().body("更新失败, 车辆不属于您.");
+        }
+        int res = bikeService.updateBike(bike);
+        if (res == 1) {
+            return ResponseEntity.ok(bike);
+        } else {
+            return ResponseEntity.badRequest().body("更新失败.");
+        }
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteBike(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam int id) {
+        Bike bike = bikeService.getBike(id);
+        if (userDetails.getUser().getUserid() != bike.getOwnerid()) {
+            return ResponseEntity.badRequest().body("删除失败, 车辆不属于您.");
+        }
+        int res = bikeService.deleteBike(id);
+        if (res == 1) {
+            return ResponseEntity.ok("删除成功.");
+        } else {
+            return ResponseEntity.badRequest().body("删除失败.");
+        }
     }
 }

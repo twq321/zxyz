@@ -10,9 +10,10 @@ import lombok.Data;
 public class Bike {
     @TableId(type = IdType.AUTO)
     private int bikeid;
-    private int userid;
     private int status;
     private String type;
+    private String bikename;
+    private int userid;
     private int parkingid;
     private int ownerid;
 }
