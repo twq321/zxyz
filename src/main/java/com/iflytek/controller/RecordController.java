@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/record")
-@Api(tags = "记录管理")
+@Api(tags = "记录控制层")
 public class RecordController {
 
     @Autowired
