@@ -1,10 +1,20 @@
 package com.iflytek.service;
 
 import com.iflytek.entity.Parking;
+import com.iflytek.entity.User;
+import com.iflytek.mapper.ParkingMapper;
+
+import java.util.List;
 
 public interface ParkingService {
-    int stParking(int userId, int bikeId, Parking parking);
-    int deParking(int userId, Parking parking);
-    int stBorrow(int userId, Parking parking);
-    int deBorrow(int userId, Parking parking);
+    ParkingMapper getParkingMapper();
+
+    List<Parking> selectByGroupId(int id);
+
+    Parking selectById(int parkingId);
+
+    int stParking(User user, int bikeId, Parking parking);
+    int deParking(User user, Parking parking);
+    int stBorrow(User user, Parking parking);
+    int deBorrow(User user, Parking parking);
 }

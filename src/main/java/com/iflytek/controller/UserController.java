@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
-@Api(tags = "用户管理")
+@Api(tags = "用户控制层")
 public class UserController {
     @Resource
     private UserService userService;
