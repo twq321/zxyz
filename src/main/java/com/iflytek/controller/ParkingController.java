@@ -76,12 +76,14 @@ public class ParkingController {
         List<Bike> bikes = bikeService.findBikesByOwnerId(user.getUserid());
         int isOwn = 0;
         for (Bike bike : bikes) {
-            if (bike.getOwnerid() == user.getUserid()) {
+            System.out.println(bike);
+            if (bike.getBikeid() == parking.getBikeid()) {
                 isOwn = 1;
                 break;
             }
         }
         int res = 0;
+
         if (isOwn == 0) {
             // 不是自己的车
             System.out.println("借车");
@@ -96,7 +98,7 @@ public class ParkingController {
             res = parkingService.stBorrow(user, parking);
         } else {
             // 是自己的车
-            System.out.println("还车");
+            System.out.println("取车");
             if (parking.getStatus() == 2) {
                 // 共享状态
                 parking.setBikeid(0);
