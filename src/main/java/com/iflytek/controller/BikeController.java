@@ -2,7 +2,10 @@ package com.iflytek.controller;
 
 import com.iflytek.dto.CustomUserDetails;
 import com.iflytek.entity.Bike;
+import com.iflytek.entity.Parking;
 import com.iflytek.service.BikeService;
+import com.iflytek.service.ParkingService;
+import com.iflytek.service.RecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,11 @@ import java.util.Map;
 public class BikeController {
     @Resource
     private BikeService bikeService;
+    @Autowired
+    private ParkingService parkingService;
+    @Autowired
+    private RecordService recordService;
+
     @ApiOperation("查看自行车")
     @GetMapping
     public ResponseEntity<?> selectBike(@AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -41,7 +49,19 @@ public class BikeController {
         if (bike.getBikeid() != userDetails.getUser().getUserid()) {
             return ResponseEntity.badRequest().body("更新失败, 车辆不属于您.");
         }
+        Bike dbBike = bikeService.getBike(bike.getBikeid());
+        if (!bike.getType().equals(dbBike.getType())) {
+            Parking parking = parkingService.selectByBikeId(bike.getBikeid());
+            parking.setStatus(bike.getType().equals("share") ? 2 : 1);
+            parkingService.updateById(parking);
+            if (dbBike.getType().equals("share")) {
+                parkingService.stParking(userDetails.getUser(), parking.getBikeid(), parking);
+            } else {
+                parkingService.deParking(userDetails.getUser(), parking);
+            }
+        }
         int res = bikeService.updateBike(bike);
+
         if (res == 1) {
             return ResponseEntity.ok(bike);
         } else {

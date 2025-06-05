@@ -29,6 +29,12 @@ public class ParkingController {
         return ResponseEntity.ok(parkingService.selectByGroupId(groupId));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateParking(@RequestParam Parking parking) {
+
+        return ResponseEntity.ok(parkingService.updateById(parking));
+    }
+
     @ApiOperation("存车/还车")
     @PostMapping("/park")
     public ResponseEntity<?> park(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam int parkingId, @RequestParam(required = false) int bikeId) {

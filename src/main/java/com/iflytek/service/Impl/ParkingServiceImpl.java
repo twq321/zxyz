@@ -44,6 +44,14 @@ public class ParkingServiceImpl implements ParkingService {
         return parkingMapper.selectById(parkingId);
     }
     @Override
+    public int updateById(Parking parking) {
+        return parkingMapper.updateById(parking);
+    }
+    @Override
+    public Parking selectByBikeId(int bikeId) {
+        return parkingMapper.selectOne(new QueryWrapper<Parking>().eq("bikeId", bikeId));
+    }
+    @Override
     public int stParking(User user, int bikeId, Parking parking) {
         Bike bike = bikeMapper.selectById(bikeId);
         bike.setParkingid(parking.getParkingid());
