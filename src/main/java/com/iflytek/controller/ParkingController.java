@@ -1,6 +1,7 @@
 package com.iflytek.controller;
 
 import com.iflytek.dto.CustomUserDetails;
+import com.iflytek.dto.ParkParam;
 import com.iflytek.entity.Bike;
 import com.iflytek.entity.Parking;
 import com.iflytek.entity.User;
@@ -29,20 +30,29 @@ public class ParkingController {
         return ResponseEntity.ok(parkingService.selectByGroupId(groupId));
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateParking(@RequestParam Parking parking) {
+
+        return ResponseEntity.ok(parkingService.updateById(parking));
+    }
+
     @ApiOperation("存车/还车")
     @PostMapping("/park")
-    public ResponseEntity<?> park(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam int parkingId, @RequestParam(required = false) int bikeId) {
+    public ResponseEntity<?> park(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ParkParam parkParam) {
         User user = userDetails.getUser();
-        Parking parking = parkingService.selectById(parkingId);
+        System.out.println("存车/还车 " + user + " " + parkParam.getParkingId());
+        Parking parking = parkingService.selectById(parkParam.getParkingId());
         if (parking.getStatus() == 1) {
             return ResponseEntity.badRequest().body("操作失败, 车位已满.");
         }
         int res = 0;
         if (user.getNowborrow() == 0) {
             // 存车
-            res = parkingService.stParking(user, bikeId, parking);
+            System.out.println("存车");
+            res = parkingService.stParking(user, parkParam.getBikeId(), parking);
         } else {
             // 还车
+            System.out.println("还车");
             res = parkingService.deBorrow(user, parking);
         }
         if (res == 0) {
@@ -53,26 +63,30 @@ public class ParkingController {
     }
     @ApiOperation("取车/借车")
     @PostMapping("/borrow")
-    public ResponseEntity<?> borrow(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam int parkingId) {
+    public ResponseEntity<?> borrow(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ParkParam parkParam) {
         User user = userDetails.getUser();
+        System.out.println("取车/借车 " + user + " " + parkParam.getParkingId());
         if (user.getNowborrow() != 0) {
             return ResponseEntity.badRequest().body("操作失败, 还有自行车未还.");
         }
-        Parking parking = parkingService.selectById(parkingId);
+        Parking parking = parkingService.selectById(parkParam.getParkingId());
         if (parking.getBikeid() == 0) {
             return ResponseEntity.badRequest().body("操作失败, 车位为空.");
         }
         List<Bike> bikes = bikeService.findBikesByOwnerId(user.getUserid());
         int isOwn = 0;
         for (Bike bike : bikes) {
+            System.out.println(bike);
             if (bike.getBikeid() == parking.getBikeid()) {
                 isOwn = 1;
                 break;
             }
         }
         int res = 0;
-        if (isOwn != 0) {
+
+        if (isOwn == 0) {
             // 不是自己的车
+            System.out.println("借车");
             if (parking.getRecordid() != 0) {
                 parking.setBikeid(0);
                 parking.setStatus(0);
@@ -84,6 +98,7 @@ public class ParkingController {
             res = parkingService.stBorrow(user, parking);
         } else {
             // 是自己的车
+            System.out.println("取车");
             if (parking.getStatus() == 2) {
                 // 共享状态
                 parking.setBikeid(0);

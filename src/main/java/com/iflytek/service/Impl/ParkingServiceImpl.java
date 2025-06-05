@@ -44,6 +44,14 @@ public class ParkingServiceImpl implements ParkingService {
         return parkingMapper.selectById(parkingId);
     }
     @Override
+    public int updateById(Parking parking) {
+        return parkingMapper.updateById(parking);
+    }
+    @Override
+    public Parking selectByBikeId(int bikeId) {
+        return parkingMapper.selectOne(new QueryWrapper<Parking>().eq("bikeId", bikeId));
+    }
+    @Override
     public int stParking(User user, int bikeId, Parking parking) {
         Bike bike = bikeMapper.selectById(bikeId);
         bike.setParkingid(parking.getParkingid());
@@ -112,14 +120,14 @@ public class ParkingServiceImpl implements ParkingService {
 
         Record record = new Record();
         record.setUserid(user.getUserid());
-        record.setBikeid(parking.getBikeid());
+        record.setBikeid(bike.getBikeid());
         record.setStarttime(LocalDateTime.now());
         record.setSparkingid(parking.getParkingid());
         record.setTouser(bike.getOwnerid());
         record.setType("borrow");
         recordMapper.insert(record);
 
-        user.setUsebikeid(parking.getBikeid());
+        user.setUsebikeid(bike.getBikeid());
         user.setNowborrow(record.getRecordid());
         return userMapper.updateById(user);
     }
@@ -130,10 +138,8 @@ public class ParkingServiceImpl implements ParkingService {
             return 0;
         }
 
-
-
         Record record = recordMapper.selectById(user.getNowborrow());
-
+        System.out.println(record);
         Bike bike = bikeMapper.selectById(record.getBikeid());
         bike.setParkingid(parking.getParkingid());
         bike.setUserid(0);
@@ -141,6 +147,7 @@ public class ParkingServiceImpl implements ParkingService {
         bikeMapper.updateById(bike);
 
         parking.setBikeid(record.getBikeid());
+        parking.setRecordid(0);
         parking.setStatus(2);
         parkingMapper.updateById(parking);
 

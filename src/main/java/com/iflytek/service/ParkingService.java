@@ -13,6 +13,10 @@ public interface ParkingService {
 
     Parking selectById(int parkingId);
 
+    int updateById(Parking parking);
+
+    Parking selectByBikeId(int bikeId);
+
     int stParking(User user, int bikeId, Parking parking);
     int deParking(User user, Parking parking);
     int stBorrow(User user, Parking parking);
