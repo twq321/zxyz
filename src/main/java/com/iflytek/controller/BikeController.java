@@ -46,10 +46,11 @@ public class BikeController {
     }
     @PutMapping("/update")
     public ResponseEntity<?> updateBike(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Bike bike) {
-        if (bike.getBikeid() != userDetails.getUser().getUserid()) {
+        Bike dbBike = bikeService.getBike(bike.getBikeid());
+        if (dbBike.getOwnerid() != userDetails.getUser().getUserid()) {
             return ResponseEntity.badRequest().body("更新失败, 车辆不属于您.");
         }
-        Bike dbBike = bikeService.getBike(bike.getBikeid());
+
         if (!bike.getType().equals(dbBike.getType())) {
             Parking parking = parkingService.selectByBikeId(bike.getBikeid());
             parking.setStatus(bike.getType().equals("share") ? 2 : 1);
