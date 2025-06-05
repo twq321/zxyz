@@ -10,5 +10,5 @@ public interface BikeService {
     int deleteBike(int bikeId);
     Bike getBike(int bikeId);
 
-    List<Bike> findBikesByOwnerId(Integer ownerId);
+    List<Bike> findBikesByOwnerId(int ownerId);
 }

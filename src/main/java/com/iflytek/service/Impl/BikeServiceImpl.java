@@ -15,6 +15,7 @@ import java.util.List;
 public class BikeServiceImpl implements BikeService {
     @Autowired
     BikeMapper bikeMapper;
+    @Override
     public int addBike(Bike bike) {
         return bikeMapper.insert(bike);
     }
@@ -37,7 +38,7 @@ public class BikeServiceImpl implements BikeService {
     }
 
     @Override
-    public List<Bike> findBikesByOwnerId(Integer ownerId) {
+    public List<Bike> findBikesByOwnerId(int ownerId) {
         return bikeMapper.selectList(new QueryWrapper<Bike>().eq("ownerId", ownerId));
     }
 
